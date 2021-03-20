@@ -165,6 +165,11 @@ func NewIterator(seq *Slist) *Iterator {
 	return it
 }
 
+func (seq *Slist) CreateIterator() interface{} {
+
+	return NewIterator(seq)
+}
+
 func (it *Iterator) HasCurr() bool {
 	return it.curr != nil
 }
