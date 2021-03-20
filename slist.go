@@ -170,6 +170,12 @@ func (seq *Slist) CreateIterator() interface{} {
 	return NewIterator(seq)
 }
 
+func (it *Iterator) ResetFirst() interface{} {
+
+	it.curr = it.listPtr.head
+	return it
+}
+
 func (it *Iterator) HasCurr() bool {
 	return it.curr != nil
 }
