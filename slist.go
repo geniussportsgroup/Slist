@@ -40,6 +40,17 @@ func (seq *Slist) IsEmpty() bool {
 	return seq.head == nil && seq.tail == nil // double check!
 }
 
+// Return a slice with the elements of the list
+func (seq *Slist) ToSlice() []interface{} {
+
+	ret := make([]interface{}, 0, 4)
+	for it := NewIterator(seq); it.HasCurr(); it.Next() {
+		ret = append(ret, it.GetCurr())
+	}
+
+	return ret
+}
+
 func (seq *Slist) __append(item interface{}) *Slist {
 
 	ptr := new(Snode)
