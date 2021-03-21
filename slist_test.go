@@ -1,6 +1,7 @@
 package Slist
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -65,5 +66,17 @@ func TestSlist_RemoveFirst(t *testing.T) {
 		assert.NotNil(t, item)
 		assert.Equal(t, item.(int), i)
 		assert.LessOrEqual(t, i, 3)
+	}
+}
+
+func TestSlist_ToSlice(t *testing.T) {
+
+	l := New(1, 2, 3)
+	s := l.ToSlice()
+
+	for i, it := 0, NewIterator(l); it.HasCurr(); it.Next() {
+		assert.Equal(t, it.GetCurr().(int), s[i].(int))
+		fmt.Printf("%d == %d\n", it.GetCurr().(int), s[i].(int))
+		i++
 	}
 }
