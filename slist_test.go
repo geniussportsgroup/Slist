@@ -80,3 +80,51 @@ func TestSlist_ToSlice(t *testing.T) {
 		i++
 	}
 }
+
+func TestSlist_clone(t *testing.T) {
+
+	l1 := New(1, 2, 3)
+	l2 := l1.clone()
+	for it1, it2 := NewIterator(l1), NewIterator(l2); it1.HasCurr() && it2.HasCurr(); {
+		assert.Equal(t, it1.GetCurr().(int), it2.GetCurr().(int))
+		it1.Next()
+		it2.Next()
+	}
+}
+
+func TestSlist_ReverseInPlace(t *testing.T) {
+
+	l := New(1, 2, 3)
+
+	l.ReverseInPlace()
+	assert.Equal(t, l.Size(), 3)
+	assert.Equal(t, l.First(), 3)
+	assert.Equal(t, l.Last(), 1)
+}
+
+func TestSlist_Reverse(t *testing.T) {
+
+	l := New(1, 2, 3)
+	r := l.Reverse()
+
+	assert.Equal(t, l.Size(), 3)
+	assert.Equal(t, l.First(), 1)
+	assert.Equal(t, l.Last(), 3)
+
+	assert.Equal(t, r.Size(), 3)
+	assert.Equal(t, r.First(), 3)
+	assert.Equal(t, r.Last(), 1)
+}
+
+func TestSlist_RotateLeftInPlace(t *testing.T) {
+
+	l := New(1, 2, 3, 4, 5)
+	lp := l.RotateLeft(2)
+	l.RotateLeftInPlace(2)
+
+	for it1, it2 := NewIterator(l), NewIterator(lp); it1.HasCurr() && it2.HasCurr(); {
+		assert.Equal(t, it1.GetCurr().(int), it2.GetCurr().(int))
+		it1.Next()
+		it2.Next()
+	}
+}

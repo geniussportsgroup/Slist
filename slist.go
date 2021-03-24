@@ -116,6 +116,7 @@ func (seq *Slist) RemoveFirst() interface{} {
 	return ret
 }
 
+// Return the first element of the list
 func (seq *Slist) First() interface{} {
 
 	if seq == nil {
@@ -124,6 +125,7 @@ func (seq *Slist) First() interface{} {
 	return seq.head.item
 }
 
+// Return the last element of the list
 func (seq *Slist) Last() interface{} {
 	if seq == nil {
 		return nil
@@ -131,6 +133,7 @@ func (seq *Slist) Last() interface{} {
 	return seq.tail.item
 }
 
+// Return true if the list is empty
 func (seq *Slist) Empty() *Slist {
 	seq.head = nil
 	seq.tail = nil
@@ -156,6 +159,7 @@ func (seq *Slist) staticAppendList(l *Slist) *Slist {
 	return seq
 }
 
+// Append to seq the received lists. Complexity O(n) where n is the number of received list
 func (seq *Slist) AppendList(l *Slist, ln ...*Slist) *Slist {
 	seq.staticAppendList(l)
 	for _, ll := range ln {
@@ -169,6 +173,7 @@ type Iterator struct {
 	curr    *Snode
 }
 
+// Return an iterator to the list
 func NewIterator(seq *Slist) *Iterator {
 	it := new(Iterator)
 	it.listPtr = seq
@@ -176,25 +181,30 @@ func NewIterator(seq *Slist) *Iterator {
 	return it
 }
 
+// Return an iterator to the list
 func (seq *Slist) CreateIterator() interface{} {
 
 	return NewIterator(seq)
 }
 
+// Reset the iterator to the first element of the list
 func (it *Iterator) ResetFirst() interface{} {
 
 	it.curr = it.listPtr.head
 	return it
 }
 
+// Return true if the iterator is positioned on a valid element
 func (it *Iterator) HasCurr() bool {
 	return it.curr != nil
 }
 
+// Return true if the current element of the list is the last of the list
 func (it *Iterator) IsLast() bool {
 	return it.curr == it.listPtr.tail
 }
 
+// Return the current element of the list
 func (it *Iterator) GetCurr() interface{} {
 	if it.curr == nil {
 		return nil
@@ -202,14 +212,16 @@ func (it *Iterator) GetCurr() interface{} {
 	return it.curr.item
 }
 
+// Advance the iterator to the next element of the list
 func (it *Iterator) Next() interface{} {
 	it.curr = it.curr.next
 	if it.curr == nil {
 		return nil
 	}
-	return it.curr.item
+	return it
 }
 
+// Return the number of elements of the list
 func (seq *Slist) Size() int {
 
 	n := 0
@@ -219,6 +231,8 @@ func (seq *Slist) Size() int {
 	return n
 }
 
+// Traverse the list and execute operation. It stops if the operation return false. Return true if
+// all the elements of the list were traversed
 func (seq *Slist) Traverse(operation func(key interface{}) bool) bool {
 
 	for it := NewIterator(seq); it.HasCurr(); it.Next() {
@@ -228,4 +242,48 @@ func (seq *Slist) Traverse(operation func(key interface{}) bool) bool {
 	}
 
 	return true
+}
+
+func (seq *Slist) clone() *Slist {
+	ret := New()
+	for it := NewIterator(seq); it.HasCurr(); it.Next() {
+		ret.Append(it.GetCurr())
+	}
+	return ret
+}
+
+// Reverse the list in place
+func (seq *Slist) ReverseInPlace() *Slist {
+
+	tmp := New()
+
+	for !seq.IsEmpty() {
+		tmp.Insert(seq.RemoveFirst())
+	}
+
+	return seq.Swap(tmp).(*Slist)
+}
+
+// Return a reversed copy of seq
+func (seq *Slist) Reverse() *Slist {
+	return seq.clone().ReverseInPlace()
+}
+
+// Rotate in place n positions to left
+func (seq *Slist) RotateLeftInPlace(n int) *Slist {
+
+	if seq.IsEmpty() || n == 0 {
+		return seq
+	}
+
+	for i := 0; i < n; i++ {
+		seq.Append(seq.RemoveFirst())
+	}
+
+	return seq
+}
+
+// Return a copy of seq rotated n positions to left
+func (seq *Slist) RotateLeft(n int) *Slist {
+	return seq.clone().RotateLeftInPlace(n)
 }
