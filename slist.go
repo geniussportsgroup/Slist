@@ -24,7 +24,7 @@ func (seq *Slist) Swap(rhs interface{}) interface{} {
 	return seq
 }
 
-// Create a new sequence with the received items
+// New Create a new sequence with the received items
 func New(items ...interface{}) *Slist {
 
 	seq := new(Slist)
@@ -34,13 +34,17 @@ func New(items ...interface{}) *Slist {
 	return seq
 }
 
-// Return true if sequence is empty
+func (seq *Slist) Create(items ...interface{}) interface{} {
+	return New(items...)
+}
+
+// IsEmpty Return true if sequence is empty
 func (seq *Slist) IsEmpty() bool {
 
 	return seq.head == nil && seq.tail == nil // double check!
 }
 
-// Return a slice with the elements of the list
+// ToSlice Return a slice with the elements of the list
 func (seq *Slist) ToSlice() []interface{} {
 
 	ret := make([]interface{}, 0, 4)
@@ -101,7 +105,7 @@ func (seq *Slist) Insert(item interface{}, items ...interface{}) *Slist {
 	return result
 }
 
-// Remove the first item of the sequence
+// RemoveFirst Remove the first item of the sequence
 func (seq *Slist) RemoveFirst() interface{} {
 
 	if seq.IsEmpty() {
@@ -116,7 +120,7 @@ func (seq *Slist) RemoveFirst() interface{} {
 	return ret
 }
 
-// Return the first element of the list
+// First Return the first element of the list
 func (seq *Slist) First() interface{} {
 
 	if seq == nil {
@@ -125,7 +129,7 @@ func (seq *Slist) First() interface{} {
 	return seq.head.item
 }
 
-// Return the last element of the list
+// Last Return the last element of the list
 func (seq *Slist) Last() interface{} {
 	if seq == nil {
 		return nil
@@ -133,7 +137,7 @@ func (seq *Slist) Last() interface{} {
 	return seq.tail.item
 }
 
-// Return true if the list is empty
+// Empty Return true if the list is empty
 func (seq *Slist) Empty() *Slist {
 	seq.head = nil
 	seq.tail = nil
@@ -159,7 +163,7 @@ func (seq *Slist) staticAppendList(l *Slist) *Slist {
 	return seq
 }
 
-// Append to seq the received lists. Complexity O(n) where n is the number of received list
+// AppendList Append to seq the received lists. Complexity O(n) where n is the number of received list
 func (seq *Slist) AppendList(l *Slist, ln ...*Slist) *Slist {
 	seq.staticAppendList(l)
 	for _, ll := range ln {
@@ -173,7 +177,7 @@ type Iterator struct {
 	curr    *Snode
 }
 
-// Return an iterator to the list
+// NewIterator Return an iterator to the list
 func NewIterator(seq *Slist) *Iterator {
 	it := new(Iterator)
 	it.listPtr = seq
@@ -181,30 +185,30 @@ func NewIterator(seq *Slist) *Iterator {
 	return it
 }
 
-// Return an iterator to the list
+// CreateIterator Return an iterator to the list
 func (seq *Slist) CreateIterator() interface{} {
 
 	return NewIterator(seq)
 }
 
-// Reset the iterator to the first element of the list
+// ResetFirst Reset the iterator to the first element of the list
 func (it *Iterator) ResetFirst() interface{} {
 
 	it.curr = it.listPtr.head
 	return it
 }
 
-// Return true if the iterator is positioned on a valid element
+// HasCurr Return true if the iterator is positioned on a valid element
 func (it *Iterator) HasCurr() bool {
 	return it.curr != nil
 }
 
-// Return true if the current element of the list is the last of the list
+// IsLast Return true if the current element of the list is the last of the list
 func (it *Iterator) IsLast() bool {
 	return it.curr == it.listPtr.tail
 }
 
-// Return the current element of the list
+// GetCurr Return the current element of the list
 func (it *Iterator) GetCurr() interface{} {
 	if it.curr == nil {
 		return nil
@@ -212,7 +216,7 @@ func (it *Iterator) GetCurr() interface{} {
 	return it.curr.item
 }
 
-// Advance the iterator to the next element of the list
+// Next Advance the iterator to the next element of the list
 func (it *Iterator) Next() interface{} {
 	it.curr = it.curr.next
 	if it.curr == nil {
@@ -221,7 +225,7 @@ func (it *Iterator) Next() interface{} {
 	return it
 }
 
-// Return the number of elements of the list
+// Size Return the number of elements of the list
 func (seq *Slist) Size() int {
 
 	n := 0
@@ -252,7 +256,7 @@ func (seq *Slist) clone() *Slist {
 	return ret
 }
 
-// Reverse the list in place
+// ReverseInPlace Reverse the list in place
 func (seq *Slist) ReverseInPlace() *Slist {
 
 	tmp := New()
@@ -264,12 +268,12 @@ func (seq *Slist) ReverseInPlace() *Slist {
 	return seq.Swap(tmp).(*Slist)
 }
 
-// Return a reversed copy of seq
+// Reverse Return a reversed copy of seq
 func (seq *Slist) Reverse() *Slist {
 	return seq.clone().ReverseInPlace()
 }
 
-// Rotate in place n positions to left
+// RotateLeftInPlace Rotate in place n positions to left
 func (seq *Slist) RotateLeftInPlace(n int) *Slist {
 
 	if seq.IsEmpty() || n == 0 {
@@ -283,7 +287,7 @@ func (seq *Slist) RotateLeftInPlace(n int) *Slist {
 	return seq
 }
 
-// Return a copy of seq rotated n positions to left
+// RotateLeft Return a copy of seq rotated n positions to left
 func (seq *Slist) RotateLeft(n int) *Slist {
 	return seq.clone().RotateLeftInPlace(n)
 }
